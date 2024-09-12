@@ -44,7 +44,7 @@ const Header = () => (
           md: "block",
         }}
       >
-        <NavDesktop linksLeft={linksLeft} linksRight={linksRight} />
+        <NavDesktop linksLeft={linksLeft} linksRight={[]} />
       </Box>
 
       <Box
@@ -53,7 +53,7 @@ const Header = () => (
           md: "none",
         }}
       >
-        <NavMobile linksLeft={linksLeft} linksRight={linksRight} />
+        <NavMobile linksLeft={linksLeft} linksRight={[]} />
       </Box>
     </Box>
   </Box>
