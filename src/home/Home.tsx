@@ -5,21 +5,20 @@ const Home = () => {
   return (
     <>
       <Stack sx={{
-        marginTop: "20px"
+        marginTop: "1%",
+        paddingRight:"25%",
+        paddingLeft:"25%"
+
       }}>
-        <Button variant="contained" color="primary" href="">
+        <Button variant="contained"  href="/mayorista">
           Buscar Mayoristas
         </Button>
         <br />
-        <Button variant="contained" color="primary" href="">
+        <Button variant="contained"  href="/productos">
           Lista de Productos y Precios
         </Button>
         <br />
-        <Button variant="contained" color="primary" href="">
-          Objetivos
-        </Button>
-        <br />
-        <Button variant="contained" color="primary" href="">
+        <Button variant="contained"  href="/notificaciones">
           Notificaciones/Noticias
         </Button>
       </Stack>
