@@ -1,7 +1,7 @@
 import Notificaciones from "@/src/notificaciones/notificaciones";
 
-const notificaciones = () => {
+const planes = () => {
   return <Notificaciones />;
 };
 
-export default notificaciones;
+export default Notificaciones;

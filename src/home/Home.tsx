@@ -10,19 +10,19 @@ const Home = () => {
         paddingLeft:"25%"
 
       }}>
-        <Button variant="contained"  href="/mayorista">
+        <Button style={{fontWeight:"bold"}}variant="contained"  href="/mayorista">
           Buscar Mayoristas
         </Button>
         <br />
-        <Button variant="contained"  href="/productos">
+        <Button style={{fontWeight:"bold"}} variant="contained"  href="/productos">
           Lista de Productos y Precios
         </Button>
         <br />
-        <Button variant="contained"  href="/notificaciones">
+        <Button style={{fontWeight:"bold"}}variant="contained"  href="/notificaciones">
           Notificaciones/Noticias
         </Button>
       </Stack>
-      <Typography display={"flex"} justifyContent={"center"} marginTop={"10px"}>
+      <Typography style={{fontWeight:"bold"}} display={"flex"} justifyContent={"center"} marginTop={"10px"} color={"#ffff"}>
         Ganancias:
       </Typography>
       <PieChart
