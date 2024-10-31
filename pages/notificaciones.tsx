@@ -1,7 +1,13 @@
-import Notificaciones from "@/src/notificaciones/notificaciones";
+import React from 'react';
+import Notificaciones from 'src/notificaciones/notificaciones';
 
-const planes = () => {
-  return <Notificaciones />;
-};
+function App() {
+    return (
+        <div className="App">
+            <Notificaciones />
+        </div>
+    );
+}
 
-export default Notificaciones;
+export default App;
+
