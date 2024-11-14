@@ -14,7 +14,7 @@ const Home = () => {
           Buscar Mayoristas
         </Button>
         <br />
-        <Button style={{fontWeight:"bold"}} variant="contained"  href="/productos">
+        <Button style={{fontWeight:"bold"}} variant="contained"  href="/mercaderia">
           Lista de Productos y Precios
         </Button>
         <br />

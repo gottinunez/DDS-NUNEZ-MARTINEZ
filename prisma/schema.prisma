@@ -19,3 +19,12 @@ model Notificacion {
   mensaje String
   fecha   DateTime @default(now())
 }
+
+model Mercaderia {
+  id             Int     @id @default(autoincrement())
+  nombre         String
+  precio         Float
+  marca          String
+  stockDisponible Int
+}
+
