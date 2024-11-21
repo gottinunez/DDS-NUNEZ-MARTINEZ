@@ -40,7 +40,7 @@
     "**/*.tsx",
     "src/**/*.ts",
     "src/**/*.tsx"
-  ],
+, "src/notificaciones/notificaciones.jsx"  ],
   "exclude": [
     "node_modules"
   ]

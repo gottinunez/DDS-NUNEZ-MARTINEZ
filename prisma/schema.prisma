@@ -28,3 +28,11 @@ model Mercaderia {
   stockDisponible Int
 }
 
+model Mayorista {
+  id          Int    @id @default(autoincrement())
+  nombre      String
+  pagina_web  String
+  ubicacion   String
+}
+
+

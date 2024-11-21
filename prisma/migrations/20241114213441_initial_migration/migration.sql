@@ -14,3 +14,4 @@ CREATE TABLE "Mercaderia" (
     "marca" TEXT NOT NULL,
     "stockDisponible" INTEGER NOT NULL
 );
+

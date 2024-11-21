@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { Button, TextField, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
@@ -11,34 +11,26 @@ const Notificaciones = () => {
   const [editId, setEditId] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Cargar las notificaciones desde localStorage o API cuando el componente se monte
+  // Cargar las notificaciones desde la API cuando el componente se monte
   useEffect(() => {
-    // Primero buscamos en el localStorage
-    const storedNotificaciones = JSON.parse(localStorage.getItem('notificaciones'));
-    if (storedNotificaciones && storedNotificaciones.length > 0) {
-      setNotificaciones(storedNotificaciones);  // Si hay notificaciones en el localStorage, las usamos
-    } else {
-      fetchNotificaciones();  // Si no, las traemos de la API
-    }
+    fetchNotificaciones();
   }, []);
 
   // Obtener las notificaciones desde la API
   const fetchNotificaciones = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/notificaciones');
-      const data = Array.isArray(response.data) ? response.data : [];
+      const data = Array.isArray(response.data.data) ? response.data.data : [];
       setNotificaciones(data);
-      localStorage.setItem('notificaciones', JSON.stringify(data)); // Guardar en localStorage
     } catch (error) {
       console.error("Error al obtener las notificaciones:", error);
-      setNotificaciones([]);  // Establecer un arreglo vacío en caso de error
     }
   };
 
   // Función para agregar o editar notificación
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datos = { titulo, mensaje, id: editId || Date.now() };
+    const datos = { titulo, mensaje, id: editId };
 
     try {
       if (editId) {
@@ -47,131 +39,98 @@ const Notificaciones = () => {
           notificacion.id === editId ? { ...notificacion, ...datos } : notificacion
         );
         setNotificaciones(updatedNotificaciones);
-        localStorage.setItem('notificaciones', JSON.stringify(updatedNotificaciones));
 
         // Actualizar en la base de datos
-        await axios.put('http://localhost:3000/api/notificaciones', { id: editId, ...datos });
+        await axios.put(`http://localhost:3000/api/notificaciones?id=${editId}`, { titulo, mensaje });
         console.log(`Notificación con ID ${editId} actualizada.`);
       } else {
-        // Crear una nueva notificación
-        const newNotificaciones = [...notificaciones, datos];
-        setNotificaciones(newNotificaciones);
-        localStorage.setItem('notificaciones', JSON.stringify(newNotificaciones));
+        // Agregar nueva notificación
+        const newNotificacion = { ...datos };
+        setNotificaciones([...notificaciones, newNotificacion]);
 
-        // Enviar la nueva notificación a la base de datos
-        await axios.post('http://localhost:3000/api/notificaciones', datos);
-        console.log("Notificación creada.");
+        // Agregar en la base de datos
+        await axios.post('http://localhost:3000/api/notificaciones', newNotificacion);
+        console.log(`Notificación con ID ${datos.id} agregada.`);
       }
-      
-      // Limpiar el formulario
+
       setTitulo('');
       setMensaje('');
       setEditId(null);
+      setOpenDialog(false);
     } catch (error) {
-      console.error("Error al enviar la notificación:", error);
+      console.error("Error al guardar la notificación:", error);
     }
   };
 
-  // Función para editar una notificación
-  const openEditDialog = (notificacion) => {
+  // Función para eliminar notificación
+  const handleDelete = async (id) => {
+    try {
+      // Eliminar de la base de datos
+      await axios.delete(`http://localhost:3000/api/notificaciones?id=${id}`);
+
+      // Eliminar de la UI
+      const updatedNotificaciones = notificaciones.filter(notificacion => notificacion.id !== id);
+      setNotificaciones(updatedNotificaciones);
+
+      console.log(`Notificación con ID ${id} eliminada.`);
+    } catch (error) {
+      console.error("Error al eliminar la notificación:", error);
+    }
+  };
+
+  // Función para abrir el formulario de edición
+  const handleEdit = (notificacion) => {
     setTitulo(notificacion.titulo);
     setMensaje(notificacion.mensaje);
     setEditId(notificacion.id);
     setOpenDialog(true);
   };
 
-  // Función para eliminar una notificación
-  const handleDelete = async (id) => {
-    try {
-      // Eliminar de la base de datos
-      await axios.delete(`http://localhost:3000/api/notificaciones?id=${id}`);
-      console.log(`Notificación con ID ${id} eliminada.`);
-
-      // Eliminar del localStorage y actualizar el estado
-      const updatedNotificaciones = notificaciones.filter((notificacion) => notificacion.id !== id);
-      setNotificaciones(updatedNotificaciones);
-      localStorage.setItem('notificaciones', JSON.stringify(updatedNotificaciones));
-    } catch (error) {
-      console.error("Error al eliminar la notificación:", error);
-    }
+  // Función para abrir el diálogo de agregar nueva notificación
+  const handleAdd = () => {
+    setTitulo('');
+    setMensaje('');
+    setEditId(null);
+    setOpenDialog(true);
   };
 
   return (
     <div>
-      <Typography color={"#000"} variant="h4" gutterBottom>Notificaciones</Typography>
-
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Título"
-          variant="outlined"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          fullWidth
-          required
-        />
-        <TextField
-          label="Mensaje"
-          variant="outlined"
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          fullWidth
-          required
-        />
-        <Button variant="contained" color="primary" type="submit">
-          {editId ? 'Editar' : 'Agregar'} Notificación
-        </Button>
-      </form>
-
+      <Button variant="contained" onClick={handleAdd}>Agregar Notificación</Button>
       <List>
-        {notificaciones.length > 0 ? (
-          notificaciones.map((notificacion) => (
-            <ListItem key={notificacion.id}>
-              <ListItemText
-                primary={notificacion.titulo}
-                secondary={notificacion.mensaje}
-              />
-              <IconButton color="primary" onClick={() => openEditDialog(notificacion)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton color="secondary" onClick={() => handleDelete(notificacion.id)}>
-                <DeleteIcon />
-              </IconButton>
-            </ListItem>
-          ))
-        ) : (
-          <ListItem>
-            <ListItemText primary="No hay notificaciones disponibles." />
+        {notificaciones.map((notificacion) => (
+          <ListItem key={notificacion.id}>
+            <ListItemText
+              primary={notificacion.titulo}
+              secondary={notificacion.mensaje}
+            />
+            <IconButton onClick={() => handleEdit(notificacion)}><EditIcon /></IconButton>
+            <IconButton onClick={() => handleDelete(notificacion.id)}><DeleteIcon /></IconButton>
           </ListItem>
-        )}
+        ))}
       </List>
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Editar Notificación</DialogTitle>
+        <DialogTitle>{editId ? 'Editar Notificación' : 'Nueva Notificación'}</DialogTitle>
         <DialogContent>
           <TextField
             label="Título"
-            variant="outlined"
+            fullWidth
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
-            fullWidth
-            required
+            margin="normal"
           />
           <TextField
             label="Mensaje"
-            variant="outlined"
+            fullWidth
             value={mensaje}
             onChange={(e) => setMensaje(e.target.value)}
-            fullWidth
-            required
+            margin="normal"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Guardar
-          </Button>
+          <Button onClick={() => setOpenDialog(false)} color="primary">Cancelar</Button>
+          <Button onClick={handleSubmit} color="primary">{editId ? 'Actualizar' : 'Agregar'}</Button>
         </DialogActions>
       </Dialog>
     </div>
@@ -179,4 +138,3 @@ const Notificaciones = () => {
 };
 
 export default Notificaciones;
-
