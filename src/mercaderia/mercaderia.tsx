@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Container, Grid, TextField, Button, Typography, Card, CardContent, CardActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
+import { TextField, Button, Typography, Grid, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from '@mui/material';
+
 type Mercaderia = {
   id: number
   nombre: string
@@ -104,116 +105,131 @@ const Mercaderia = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Gestión de Mercadería</h1>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom sx={{color:"#c20000"}}>
+        Gestión de Mercadería
+      </Typography>
 
       {/* Formulario */}
-      <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <Paper sx={{ p: 4, mb: 4, borderRadius: 2, boxShadow: 3 }}>
         <form onSubmit={manejarSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-700">Nombre</label>
-              <input
-                type="text"
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Nombre"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
+                fullWidth
                 required
-                className="mt-1 p-2 w-full border rounded-md"
+                variant="outlined"
               />
-            </div>
+            </Grid>
 
-            <div>
-              <label className="block text-gray-700">Precio</label>
-              <input
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Precio"
                 type="number"
                 value={precio}
                 onChange={(e) => setPrecio(Number(e.target.value))}
+                fullWidth
                 required
-                className="mt-1 p-2 w-full border rounded-md"
+                variant="outlined"
               />
-            </div>
+            </Grid>
 
-            <div>
-              <label className="block text-gray-700">Marca</label>
-              <input
-                type="text"
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Marca"
                 value={marca}
                 onChange={(e) => setMarca(e.target.value)}
+                fullWidth
                 required
-                className="mt-1 p-2 w-full border rounded-md"
+                variant="outlined"
               />
-            </div>
+            </Grid>
 
-            <div>
-              <label className="block text-gray-700">Stock Disponible</label>
-              <input
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Stock Disponible"
                 type="number"
                 value={stockDisponible}
                 onChange={(e) => setStockDisponible(Number(e.target.value))}
+                fullWidth
                 required
-                className="mt-1 p-2 w-full border rounded-md"
+                variant="outlined"
               />
-            </div>
-          </div>
+            </Grid>
+          </Grid>
 
-          <div className="mt-6">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-            >
-              {editId ? 'Actualizar Mercadería' : 'Crear Mercadería'}
-            </button>
-          </div>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3 }}
+            disabled={loading}
+          >
+            {editId ? 'Actualizar Mercadería' : 'Crear Mercadería'}
+          </Button>
         </form>
 
-        {/* Mensajes de error */}
-        {error && <div className="text-red-500 mt-4">{error}</div>}
-      </div>
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+      </Paper>
+      <Typography variant="h6" gutterBottom sx={{color:"#c20000"}}>
+        Lista de Mercaderías
+      </Typography>
 
-      {/* Lista de mercaderías */}
-      <h2 className="text-2xl font-semibold mb-4">Lista de Mercaderías</h2>
       {loading ? (
-        <div className="text-center">Cargando...</div>
+        <CircularProgress sx={{ display: 'block', margin: 'auto' }} />
       ) : (
-        <table className="min-w-full table-auto">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4 text-left">Nombre</th>
-              <th className="py-2 px-4 text-left">Precio</th>
-              <th className="py-2 px-4 text-left">Marca</th>
-              <th className="py-2 px-4 text-left">Stock Disponible</th>
-              <th className="py-2 px-4 text-left">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mercaderias.map((mercaderia) => (
-              <tr key={mercaderia.id} className="border-b">
-                <td className="py-2 px-4">{mercaderia.nombre}</td>
-                <td className="py-2 px-4">${mercaderia.precio}</td>
-                <td className="py-2 px-4">{mercaderia.marca}</td>
-                <td className="py-2 px-4">{mercaderia.stockDisponible}</td>
-                <td className="py-2 px-4 flex space-x-2">
-                  <button
-                    onClick={() => manejarEditar(mercaderia)}
-                    className="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => manejarEliminar(mercaderia.id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Precio</TableCell>
+                <TableCell>Marca</TableCell>
+                <TableCell>Stock Disponible</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mercaderias.map((mercaderia) => (
+                <TableRow key={mercaderia.id}>
+                  <TableCell>{mercaderia.nombre}</TableCell>
+                  <TableCell>${mercaderia.precio}</TableCell>
+                  <TableCell>{mercaderia.marca}</TableCell>
+                  <TableCell>{mercaderia.stockDisponible}</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => manejarEditar(mercaderia)}
+                      variant="outlined"
+                      color="warning"
+                      sx={{ mr: 1 }}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      onClick={() => manejarEliminar(mercaderia.id)}
+                      variant="outlined"
+                      color="error"
+                    >
+                      Eliminar
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-    </div>
-  )
-}
+    </Container>
+  );
+};
+
 
 export default Mercaderia

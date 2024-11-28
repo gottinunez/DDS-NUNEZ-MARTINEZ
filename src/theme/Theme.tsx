@@ -4,8 +4,8 @@ const options: ThemeOptions = {
   palette: {
     primary: {
       light: "#757ce8",
-      main: "#f82b2b",
-      dark: "#002884",
+      main: "#c20000",
+      dark: "black",
       contrastText: "#fff",
     },
     secondary: {

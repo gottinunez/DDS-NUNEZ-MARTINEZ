@@ -85,7 +85,7 @@ const MayoristasPage = () => {
 
   return (
 <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom color={"#ffff"}>
+      <Typography variant="h4" gutterBottom color={"#c20000"}>
         Mayoristas
       </Typography>
 
@@ -138,7 +138,7 @@ const MayoristasPage = () => {
       </Card>
 
       {/* Lista de Mayoristas */}
-      <Typography variant="h5" gutterBottom color={"#ffff"}>
+      <Typography variant="h5" gutterBottom color={"#c20000"}>
         Lista de Mayoristas
       </Typography>
       {mayoristas.map((mayorista) => (

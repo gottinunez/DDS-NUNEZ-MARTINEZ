@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Box, Typography, Paper, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
@@ -93,48 +93,71 @@ const Notificaciones = () => {
     setEditId(null);
     setOpenDialog(true);
   };
-
-  return (
-    <div>
-      <Button variant="contained" onClick={handleAdd}>Agregar Notificación</Button>
-      <List>
-        {notificaciones.map((notificacion) => (
-          <ListItem key={notificacion.id}>
-            <ListItemText
-              primary={notificacion.titulo}
-              secondary={notificacion.mensaje}
+    return (
+      <Box sx={{ padding: 3 }}>
+        {/* Título principal */}
+        <Typography variant="h4" component="h1" gutterBottom align="center" sx={{color:"#c20000"}}>
+          Gestión de Notificaciones
+        </Typography>
+  
+        {/* Botón para agregar notificación */}
+        <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleAdd}>
+            Agregar Notificación
+          </Button>
+        </Box>
+  
+        {/* Lista de notificaciones */}
+        <Paper sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
+          <List>
+            {notificaciones.map((notificacion) => (
+              <ListItem key={notificacion.id} sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}>
+                <ListItemText
+                  primary={notificacion.titulo}
+                  secondary={notificacion.mensaje}
+                  sx={{ flex: 1 }}
+                />
+                <IconButton onClick={() => handleEdit(notificacion)} sx={{ color: 'primary.main' }}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => handleDelete(notificacion.id)} sx={{ color: 'error.main' }}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+  
+        {/* Diálogo de edición o creación */}
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>{editId ? 'Editar Notificación' : 'Nueva Notificación'}</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Título"
+              fullWidth
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              margin="normal"
             />
-            <IconButton onClick={() => handleEdit(notificacion)}><EditIcon /></IconButton>
-            <IconButton onClick={() => handleDelete(notificacion.id)}><DeleteIcon /></IconButton>
-          </ListItem>
-        ))}
-      </List>
-
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>{editId ? 'Editar Notificación' : 'Nueva Notificación'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Título"
-            fullWidth
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            margin="normal"
-          />
-          <TextField
-            label="Mensaje"
-            fullWidth
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-            margin="normal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">Cancelar</Button>
-          <Button onClick={handleSubmit} color="primary">{editId ? 'Actualizar' : 'Agregar'}</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-};
-
-export default Notificaciones;
+            <TextField
+              label="Mensaje"
+              fullWidth
+              value={mensaje}
+              onChange={(e) => setMensaje(e.target.value)}
+              margin="normal"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={handleSubmit} color="primary">
+              {editId ? 'Actualizar' : 'Agregar'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    );
+  };
+  
+  export default Notificaciones;

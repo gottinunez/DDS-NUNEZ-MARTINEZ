@@ -1,13 +1,15 @@
 import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 import ganancias from "@/src/fake/fake"
+import MapComponent from "../mapa/MapComponent.jsx";
 const Home = () => {
   return (
     <>
       <Stack sx={{
-        marginTop: "1%",
+        marginTop: "3%",
         paddingRight:"25%",
         paddingLeft:"25%"
+
 
       }}>
         <Button style={{fontWeight:"bold"}}variant="contained"  href="/mayorista">
@@ -22,27 +24,8 @@ const Home = () => {
           Notificaciones/Noticias
         </Button>
       </Stack>
-      <Typography style={{fontWeight:"bold"}} display={"flex"} justifyContent={"center"} marginTop={"10px"} color={"#ffff"}>
-        Ganancias:
-      </Typography>
-      <PieChart
-          series={[
-            {
-              data: ganancias,
-            },
-          ]}
-          {...pieParams}
-        />
-
-
-    </>
+      </>
   );
-};
-
-const pieParams = {
-  height: 200,
-  margin: { right: 5 },
-  slotProps: { legend: { hidden: true } },
 };
 
 export default Home;
