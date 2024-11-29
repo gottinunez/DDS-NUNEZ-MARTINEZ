@@ -1,4 +1,4 @@
-// pages/mayoristas.tsx
+
 
 import { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Container, Typography, Card, CardContent, CardActions } from '@mui/material';
@@ -168,3 +168,5 @@ const MayoristasPage = () => {
 
 
 export default MayoristasPage;
+
+

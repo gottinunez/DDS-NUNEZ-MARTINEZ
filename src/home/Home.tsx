@@ -1,7 +1,7 @@
 import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 import ganancias from "@/src/fake/fake"
-import MapComponent from "../mapa/MapComponent.jsx";
+import App from "@/src/mapa/mapa";
 const Home = () => {
   return (
     <>
@@ -24,6 +24,7 @@ const Home = () => {
           Notificaciones/Noticias
         </Button>
       </Stack>
+      <App/>
       </>
   );
 };
