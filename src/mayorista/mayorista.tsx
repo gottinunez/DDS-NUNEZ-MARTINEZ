@@ -21,10 +21,20 @@ const MayoristasPage = () => {
   // Cargar mayoristas al cargar la página
   useEffect(() => {
     const fetchMayoristas = async () => {
-      const response = await fetch('/api/mayoristas');
-      const data = await response.json();
-      setMayoristas(data);
+      try {
+        const response = await fetch('/api/mayoristas');
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+    
+        const data = await response.json();
+        setMayoristas(data);
+      } catch (error) {
+        console.error('Error fetching mayoristas:', error);
+      }
     };
+    
 
     fetchMayoristas();
   }, []);

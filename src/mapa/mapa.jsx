@@ -1,11 +1,10 @@
-// src/App.tsx
 import React, { useState, useRef } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from "@react-google-maps/api";
-import { TextField, Box, Typography, Paper } from "@mui/material";
+import { TextField, Box, Paper } from "@mui/material";
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "300px", // Reducir altura del mapa
 };
 
 const center = {
@@ -43,12 +42,9 @@ const App = () => {
   };
 
   return (
-    <LoadScript
-      googleMapsApiKey="AIzaSyDmUUNxeq1Je45vriZvQTPYUgXWmvXWc00" // Reemplaza con tu API Key
-      libraries={libraries}
-    >
-      <Box sx={{ padding: 2 }}>
-        <Paper sx={{ padding: 2, marginBottom: 2 }}>
+    <LoadScript googleMapsApiKey="" libraries={libraries}>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
+        <Paper sx={{ padding: 2, marginBottom: 2, maxWidth: 600, width: "100%" }}>
           <Autocomplete
             onLoad={(autocomplete) => {
               autocompleteRef.current = autocomplete; // Almacena la instancia de Autocomplete
@@ -60,6 +56,13 @@ const App = () => {
               fullWidth
               variant="outlined"
               placeholder="Ingresa una direccion"
+              sx={{
+                fontSize: '0.875rem',  // Reducir el tamaño de la fuente
+                height: '45px',        // Reducir la altura de la barra
+                '& .MuiOutlinedInput-root': {
+                  height: '45px',
+                },
+              }}
             />
           </Autocomplete>
         </Paper>
@@ -68,6 +71,11 @@ const App = () => {
           mapContainerStyle={containerStyle}
           center={markerPosition}
           zoom={zoom}
+          options={{
+            // Opciones para controlar el mapa (por ejemplo, quitar los controles de zoom)
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
         >
           <Marker position={markerPosition} />
           {infoWindowOpen && selectedPlace && (
