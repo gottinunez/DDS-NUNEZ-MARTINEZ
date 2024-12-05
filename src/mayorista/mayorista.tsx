@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Container, Typography, Card, CardContent, CardActions } from '@mui/material';
+import App from '@/src/mapa/mapa';
+
 type Mayorista = {
   id: number;
   nombre: string;
@@ -23,18 +25,18 @@ const MayoristasPage = () => {
     const fetchMayoristas = async () => {
       try {
         const response = await fetch('/api/mayoristas');
-        
+
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
-    
+
         const data = await response.json();
         setMayoristas(data);
       } catch (error) {
         console.error('Error fetching mayoristas:', error);
       }
     };
-    
+
 
     fetchMayoristas();
   }, []);
@@ -94,7 +96,7 @@ const MayoristasPage = () => {
   };
 
   return (
-<Container maxWidth="sm" sx={{ mt: 4 }}>
+    <><Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom color={"#c20000"}>
         Mayoristas
       </Typography>
@@ -112,8 +114,7 @@ const MayoristasPage = () => {
                   name="nombre"
                   value={formData.nombre}
                   onChange={handleChange}
-                  required
-                />
+                  required />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -123,8 +124,7 @@ const MayoristasPage = () => {
                   name="pagina_web"
                   value={formData.pagina_web}
                   onChange={handleChange}
-                  required
-                />
+                  required />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -134,8 +134,7 @@ const MayoristasPage = () => {
                   name="ubicacion"
                   value={formData.ubicacion}
                   onChange={handleChange}
-                  required
-                />
+                  required />
               </Grid>
               <Grid item xs={12} textAlign="right">
                 <Button type="submit" variant="contained" color="primary">
@@ -173,6 +172,7 @@ const MayoristasPage = () => {
         </Card>
       ))}
     </Container>
+      <App /></>
   );
 };
 

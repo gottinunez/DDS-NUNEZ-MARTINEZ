@@ -1,7 +1,10 @@
-import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack } from "@mui/material";
+import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack, Link, IconButton } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
 import ganancias from "@/src/fake/fake"
-import App from "@/src/mapa/mapa";
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { Link } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+
 const Home = () => {
   return (
     <>
@@ -16,15 +19,22 @@ const Home = () => {
           Buscar Mayoristas
         </Button>
         <br />
+        <br/>
         <Button style={{fontWeight:"bold"}} variant="contained"  href="/mercaderia">
           Lista de Productos y Precios
         </Button>
         <br />
+        <br/>
         <Button style={{fontWeight:"bold"}}variant="contained"  href="/notificaciones">
           Notificaciones/Noticias
         </Button>
+        <Link to="/sobrenosotros" style={{ textDecoration: 'none' }}>
+      {/* Usamos IconButton para que sea clickeable y tenga estilo de botón */}
+      <IconButton>
+        <FingerprintIconIcon />
+      </IconButton>
+    </Link>
       </Stack>
-      <App/>
       </>
   );
 };

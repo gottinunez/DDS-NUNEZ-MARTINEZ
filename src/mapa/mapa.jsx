@@ -42,7 +42,8 @@ const App = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey="" libraries={libraries}>
+    <LoadScript googleMapsApiKey="AIzaSyDs0xTWNKu6dR18FE5YcGvrj-rEiyP9OKw
+" libraries={libraries}>
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
         <Paper sx={{ padding: 2, marginBottom: 2, maxWidth: 600, width: "100%" }}>
           <Autocomplete

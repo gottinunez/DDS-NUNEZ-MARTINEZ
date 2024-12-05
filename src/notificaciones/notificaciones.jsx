@@ -19,7 +19,7 @@ const Notificaciones = () => {
   // Obtener las notificaciones desde la API
   const fetchNotificaciones = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/notificaciones');
+      const response = await axios.get('http://localhost:3000/api/notificaciones');
       const data = Array.isArray(response.data.data) ? response.data.data : [];
       setNotificaciones(data);
     } catch (error) {
@@ -41,7 +41,7 @@ const Notificaciones = () => {
         setNotificaciones(updatedNotificaciones);
 
         // Actualizar en la base de datos
-        await axios.put(`http://localhost:3001/api/notificaciones?id=${editId}`, { titulo, mensaje });
+        await axios.put(`http://localhost:3000/api/notificaciones?id=${editId}`, { titulo, mensaje });
         console.log(`Notificación con ID ${editId} actualizada.`);
       } else {
         // Agregar nueva notificación
@@ -49,7 +49,7 @@ const Notificaciones = () => {
         setNotificaciones([...notificaciones, newNotificacion]);
 
         // Agregar en la base de datos
-        await axios.post('http://localhost:3001/api/notificaciones', newNotificacion);
+        await axios.post('http://localhost:3000/api/notificaciones', newNotificacion);
         console.log(`Notificación con ID ${datos.id} agregada.`);
       }
 
@@ -66,7 +66,7 @@ const Notificaciones = () => {
   const handleDelete = async (id) => {
     try {
       // Eliminar de la base de datos
-      await axios.delete(`http://localhost:3001/api/notificaciones?id=${id}`);
+      await axios.delete(`http://localhost:3000/api/notificaciones?id=${id}`);
 
       // Eliminar de la UI
       const updatedNotificaciones = notificaciones.filter(notificacion => notificacion.id !== id);
