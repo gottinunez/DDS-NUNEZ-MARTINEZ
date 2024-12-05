@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  InfoWindow,
+  Autocomplete,
+} from "@react-google-maps/api";
 import { TextField, Box, Paper } from "@mui/material";
 
 const containerStyle = {
@@ -42,10 +48,22 @@ const App = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyDs0xTWNKu6dR18FE5YcGvrj-rEiyP9OKw
-" libraries={libraries}>
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
-        <Paper sx={{ padding: 2, marginBottom: 2, maxWidth: 600, width: "100%" }}>
+    <LoadScript
+      googleMapsApiKey="
+"
+      libraries={libraries}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: 2,
+        }}
+      >
+        <Paper
+          sx={{ padding: 2, marginBottom: 2, maxWidth: 600, width: "100%" }}
+        >
           <Autocomplete
             onLoad={(autocomplete) => {
               autocompleteRef.current = autocomplete; // Almacena la instancia de Autocomplete
@@ -58,10 +76,10 @@ const App = () => {
               variant="outlined"
               placeholder="Ingresa una direccion"
               sx={{
-                fontSize: '0.875rem',  // Reducir el tamaño de la fuente
-                height: '45px',        // Reducir la altura de la barra
-                '& .MuiOutlinedInput-root': {
-                  height: '45px',
+                fontSize: "0.875rem", // Reducir el tamaño de la fuente
+                height: "45px", // Reducir la altura de la barra
+                "& .MuiOutlinedInput-root": {
+                  height: "45px",
                 },
               }}
             />
