@@ -1,9 +1,6 @@
-import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack, Link, IconButton } from "@mui/material";
+import { Container, CardActionArea, CardActions, CardContent, CardMedia, Typography, Button, Card, Stack, Link, IconButton, Box } from "@mui/material";
 import { PieChart } from '@mui/x-charts/PieChart';
-import ganancias from "@/src/fake/fake"
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import { Link } from 'react-router-dom';
-import { IconButton } from '@mui/material';
 
 const Home = () => {
   return (
@@ -16,24 +13,63 @@ const Home = () => {
 
       }}>
         <Button style={{fontWeight:"bold"}}variant="contained"  href="/mayorista">
-          Buscar Mayoristas
+          Mis Mayoristas
         </Button>
         <br />
         <br/>
         <Button style={{fontWeight:"bold"}} variant="contained"  href="/mercaderia">
-          Lista de Productos y Precios
+          Lista de Mercaderia
         </Button>
         <br />
         <br/>
         <Button style={{fontWeight:"bold"}}variant="contained"  href="/notificaciones">
-          Notificaciones/Noticias
+          Notificaciones
         </Button>
-        <Link to="/sobrenosotros" style={{ textDecoration: 'none' }}>
-      {/* Usamos IconButton para que sea clickeable y tenga estilo de botón */}
-      <IconButton>
-        <FingerprintIconIcon />
-      </IconButton>
-    </Link>
+        <Box
+      sx={{
+        paddingTop: "20%",
+        paddingBottom: "20%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "70%", // Ocupa el 70% de la altura de la pantalla
+        flexDirection: "column", // Coloca los elementos en columna
+      }}
+    >
+      <Link href="/sobrenosotros" style={{ textDecoration: "none", textAlign: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column", // Ordena ícono y texto en columna
+            alignItems: "center", // Centra horizontalmente
+          }}
+        >
+          <IconButton
+            sx={{
+              width: 80, // Tamaño personalizado
+              height: 80, // Tamaño personalizado
+              backgroundColor: "#ffffff", // Color de fondo del botón
+              color: "black", // Color del ícono
+              "&:hover": {
+                backgroundColor: "#c20000",// Color al pasar el mouse
+                color:"white" // Color del icono
+              },
+            }}
+          >
+            <FingerprintIcon sx={{ fontSize: 50 }} /> {/* Ícono más grande */}
+          </IconButton>
+          <Typography
+            sx={{
+              marginTop: "8px", // Espaciado entre ícono y texto
+              fontSize: "16px", // Tamaño del texto
+              color: "black", // Color del texto
+            }}
+          >
+            Sobre Nosotros
+          </Typography>
+        </Box>
+      </Link>
+    </Box>
       </Stack>
       </>
   );

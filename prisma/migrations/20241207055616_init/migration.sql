@@ -3,7 +3,7 @@ CREATE TABLE "Notificacion" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "titulo" TEXT NOT NULL,
     "mensaje" TEXT NOT NULL,
-    "fecha" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "fechaLimite" DATETIME
 );
 
 -- CreateTable
@@ -15,3 +15,10 @@ CREATE TABLE "Mercaderia" (
     "stockDisponible" INTEGER NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "Mayorista" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nombre" TEXT NOT NULL,
+    "pagina_web" TEXT NOT NULL,
+    "ubicacion" TEXT NOT NULL
+);

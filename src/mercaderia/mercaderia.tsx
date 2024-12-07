@@ -24,7 +24,7 @@ const Mercaderia = () => {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/mercaderia')
+      const res = await fetch(window.location.origin + '/api/mercaderia')
       const data = await res.json()
       setMercaderias(data.data)
     } catch (error) {
@@ -47,8 +47,7 @@ const Mercaderia = () => {
     setError('')
     try {
       const method = editId === null ? 'POST' : 'PUT'
-      const url = editId ? `/api/mercaderia?id=${editId}` : '/api/mercaderia'
-      const res = await fetch(url, {
+      const res = await fetch((editId ? `/api/mercaderia?id=${editId}` : '/api/mercaderia'), {
         method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mercaderia),

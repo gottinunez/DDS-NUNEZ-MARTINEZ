@@ -14,11 +14,12 @@ generator client {
 }
 
 model Notificacion {
-  id      Int      @id @default(autoincrement())
-  titulo  String
-  mensaje String
-  fecha   DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  mensaje     String
+  fechaLimite DateTime
 }
+
 
 model Mercaderia {
   id             Int     @id @default(autoincrement())
@@ -34,5 +35,3 @@ model Mayorista {
   pagina_web  String
   ubicacion   String
 }
-
-
