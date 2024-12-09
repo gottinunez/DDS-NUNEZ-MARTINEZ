@@ -17,8 +17,11 @@ model Notificacion {
   id          Int      @id @default(autoincrement())
   titulo      String
   mensaje     String
-  fechaLimite DateTime
+  scheduledAt DateTime
+  createdAt   DateTime @default(now())
+  isSent      Boolean  @default(false)
 }
+
 
 
 model Mercaderia {

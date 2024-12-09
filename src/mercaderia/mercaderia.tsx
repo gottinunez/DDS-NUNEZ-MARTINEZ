@@ -24,7 +24,7 @@ const Mercaderia = () => {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(window.location.origin + '/api/mercaderia')
+      const res = await fetch(`${window.location.origin}/api/mercaderia`)
       const data = await res.json()
       setMercaderias(data.data)
     } catch (error) {

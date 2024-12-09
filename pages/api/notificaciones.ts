@@ -1,7 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-// import { dbClient } from '@db/client'
-
-// const db = new dbClient()
 import db from "../../db"
 
 type ResponseData = {
@@ -14,8 +11,8 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   const { method } = req
-  const { id } = req.query  // Obtenemos el id desde la URL para los métodos PUT y DELETE
-  const { titulo, mensaje } = req.body
+  const { id } = req.query // ID para métodos PUT y DELETE
+  const { titulo, mensaje, scheduledAt } = req.body // Agregamos `scheduledAt` para POST y PUT
 
   if (method === 'GET') {
     // GET: Obtener todas las notificaciones
@@ -33,13 +30,17 @@ export default async function handler(
 
   if (method === 'POST') {
     // POST: Crear nueva notificación
-    if (!titulo || !mensaje) {
-      return res.status(400).json({ message: 'El título y el mensaje son obligatorios' })
+    if (!titulo || !mensaje || !scheduledAt) {
+      return res.status(400).json({ message: 'El título, mensaje y fecha de programación son obligatorios' })
     }
 
     try {
       const nuevaNotificacion = await db.notificacion.create({
-        data: { titulo, mensaje }
+        data: {
+          titulo,
+          mensaje,
+          scheduledAt: new Date(scheduledAt) // Convertimos `scheduledAt` a un objeto Date
+        }
       })
 
       return res.status(201).json({
@@ -54,8 +55,8 @@ export default async function handler(
 
   if (method === 'PUT') {
     // PUT: Actualizar una notificación existente
-    if (!id || !titulo || !mensaje) {
-      return res.status(400).json({ message: 'ID, título y mensaje son obligatorios' })
+    if (!id || !titulo || !mensaje || !scheduledAt) {
+      return res.status(400).json({ message: 'ID, título, mensaje y fecha de programación son obligatorios' })
     }
 
     try {
@@ -69,7 +70,11 @@ export default async function handler(
 
       const notificacionActualizada = await db.notificacion.update({
         where: { id: Number(id) },
-        data: { titulo, mensaje }
+        data: {
+          titulo,
+          mensaje,
+          scheduledAt: new Date(scheduledAt) // Convertimos `scheduledAt` a un objeto Date
+        }
       })
 
       return res.status(200).json({

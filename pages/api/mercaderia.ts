@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import db from "../../db"
+import db from "@/db/index"
 
 type ResponseData = {
   message: string
@@ -11,22 +11,23 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   const { method } = req
-  const { id } = req.query  // Obtenemos el id desde la URL para los métodos PUT y DELETE
+  const { id } = req.query  // Aquí obtenemos el 'id' dinámicamente
   const { nombre, precio, marca, stockDisponible } = req.body
 
   if (method === 'GET') {
-    // GET: Obtener todas las mercaderías
+    console.log('Recibiendo solicitud GET');
     try {
-      const mercaderia = await db.mercaderia.findMany()
+      const mercaderia = await db.mercaderia.findMany();
       return res.status(200).json({
         message: 'Mercaderías obtenidas exitosamente',
-        data: mercaderia
-      })
+        data: mercaderia,
+      });
     } catch (error) {
-      console.error('Error al obtener las mercaderías:', error)
-      return res.status(500).json({ message: 'Error al obtener las mercaderías' })
+      console.error('Error al obtener las mercaderías:', error);
+      return res.status(500).json({ message: 'Error al obtener las mercaderías' });
     }
   }
+  
 
   if (method === 'POST') {
     // POST: Crear nueva mercadería
