@@ -1,111 +1,135 @@
-import { useState, useEffect } from 'react'
-import { TextField, Button, Typography, Grid, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from '@mui/material';
+import { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+} from "@mui/material";
 
 type Mercaderia = {
-  id: number
-  nombre: string
-  precio: number
-  marca: string
-  stockDisponible: number
-}
+  id: number;
+  nombre: string;
+  precio: number;
+  marca: string;
+  stockDisponible: number;
+};
 
 const Mercaderia = () => {
-  const [mercaderias, setMercaderias] = useState<Mercaderia[]>([])
-  const [nombre, setNombre] = useState('')
-  const [precio, setPrecio] = useState(0)
-  const [marca, setMarca] = useState('')
-  const [stockDisponible, setStockDisponible] = useState(0)
-  const [editId, setEditId] = useState<number | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
+  const [mercaderias, setMercaderias] = useState<Mercaderia[]>([]);
+  const [nombre, setNombre] = useState("");
+  const [precio, setPrecio] = useState(0);
+  const [marca, setMarca] = useState("");
+  const [stockDisponible, setStockDisponible] = useState(0);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   // Cargar todas las mercaderías
   const cargarMercaderias = async () => {
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError("");
     try {
-      const res = await fetch(`${window.location.origin}/api/mercaderia`)
-      const data = await res.json()
-      setMercaderias(data.data)
+      const res = await fetch(`${window.location.origin}/api/mercaderia`);
+      const data = await res.json();
+
+      // Validamos que la respuesta sea un array
+      setMercaderias(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
-      setError('Error al cargar las mercaderías.')
+      setError("Error 1.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    cargarMercaderias()
-  }, [])
+    cargarMercaderias();
+  }, []);
 
   // Crear o actualizar una mercadería
   const manejarSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const mercaderia = { nombre, precio, marca, stockDisponible }
-    setLoading(true)
-    setError('')
+    const mercaderia = { nombre, precio, marca, stockDisponible };
+    setLoading(true);
+    setError("");
     try {
-      const method = editId === null ? 'POST' : 'PUT'
-      const res = await fetch((editId ? `/api/mercaderia?id=${editId}` : '/api/mercaderia'), {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(mercaderia),
-      })
+      const method = editId === null ? "POST" : "PUT";
+      const res = await fetch(
+        editId ? `/api/mercaderia?id=${editId}` : "/api/mercaderia",
+        {
+          method: method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(mercaderia),
+        }
+      );
 
-      const data = await res.json()
-      alert(data.message)
+      const data = await res.json();
+      alert(data.message);
 
       // Limpiar el formulario
-      setNombre('')
-      setPrecio(0)
-      setMarca('')
-      setStockDisponible(0)
-      setEditId(null)
+      setNombre("");
+      setPrecio(0);
+      setMarca("");
+      setStockDisponible(0);
+      setEditId(null);
 
       // Recargar las mercaderías después de la creación o actualización
-      cargarMercaderias()
+      cargarMercaderias();
     } catch (error) {
-      setError('Hubo un error al guardar la mercadería.')
+      setError("Hubo un error 2");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Eliminar una mercadería
   const manejarEliminar = async (id: number) => {
-    if (confirm('¿Estás seguro de eliminar esta mercadería?')) {
-      setLoading(true)
-      setError('')
+    if (confirm("¿Estás seguro de eliminar esta mercadería?")) {
+      setLoading(true);
+      setError("");
       try {
         const res = await fetch(`/api/mercaderia?id=${id}`, {
-          method: 'DELETE',
-        })
-        const data = await res.json()
-        alert(data.message)
+          method: "DELETE",
+        });
+        const data = await res.json();
+        alert(data.message);
 
         // Recargar las mercaderías después de la eliminación
-        cargarMercaderias()
+        cargarMercaderias();
       } catch (error) {
-        setError('Hubo un error al eliminar la mercadería.')
+        setError("Hubo un error 3");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   // Editar una mercadería
   const manejarEditar = (mercaderia: Mercaderia) => {
-    setNombre(mercaderia.nombre)
-    setPrecio(mercaderia.precio)
-    setMarca(mercaderia.marca)
-    setStockDisponible(mercaderia.stockDisponible)
-    setEditId(mercaderia.id)
-  }
+    setNombre(mercaderia.nombre);
+    setPrecio(mercaderia.precio);
+    setMarca(mercaderia.marca);
+    setStockDisponible(mercaderia.stockDisponible);
+    setEditId(mercaderia.id);
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{color:"#c20000"}}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ color: "#c20000" }}
+      >
         Gestión de Mercadería
       </Typography>
 
@@ -166,9 +190,11 @@ const Mercaderia = () => {
             color="primary"
             fullWidth
             sx={{ mt: 3 }}
-            disabled={loading}
+            disabled={
+              loading || !nombre || !precio || !marca || stockDisponible === 0
+            }
           >
-            {editId ? 'Actualizar Mercadería' : 'Crear Mercadería'}
+            {editId ? "Actualizar Mercadería" : "Crear Mercadería"}
           </Button>
         </form>
 
@@ -178,13 +204,14 @@ const Mercaderia = () => {
           </Typography>
         )}
       </Paper>
-      <Typography variant="h6" gutterBottom sx={{color:"#c20000"}}>
+
+      <Typography variant="h6" gutterBottom sx={{ color: "#c20000" }}>
         Lista de Mercaderías
       </Typography>
 
       {loading ? (
-        <CircularProgress sx={{ display: 'block', margin: 'auto' }} />
-      ) : (
+        <CircularProgress sx={{ display: "block", margin: "auto" }} />
+      ) : Array.isArray(mercaderias) && mercaderias.length > 0 ? (
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -225,10 +252,11 @@ const Mercaderia = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      ) : (
+        <Typography align="center">No hay mercaderías disponibles.</Typography>
       )}
     </Container>
   );
 };
 
-
-export default Mercaderia
+export default Mercaderia;

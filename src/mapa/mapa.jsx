@@ -49,8 +49,7 @@ const App = () => {
 
   return (
     <LoadScript
-      googleMapsApiKey="
-"
+      googleMapsApiKey="AIzaSyAbcDfc2YyN33BuS5FGbve0T81oZkj0PjE"
       libraries={libraries}
     >
       <Box
