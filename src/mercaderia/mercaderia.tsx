@@ -40,11 +40,9 @@ const Mercaderia = () => {
     try {
       const res = await fetch(`${window.location.origin}/api/mercaderia`);
       const data = await res.json();
-
-      // Validamos que la respuesta sea un array
       setMercaderias(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
-      setError("Error 1.");
+      setError("Error al cargar mercaderías.");
     } finally {
       setLoading(false);
     }
@@ -57,7 +55,6 @@ const Mercaderia = () => {
   // Crear o actualizar una mercadería
   const manejarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const mercaderia = { nombre, precio, marca, stockDisponible };
     setLoading(true);
     setError("");
@@ -85,7 +82,7 @@ const Mercaderia = () => {
       // Recargar las mercaderías después de la creación o actualización
       cargarMercaderias();
     } catch (error) {
-      setError("Hubo un error 2");
+      setError("Hubo un error al guardar la mercadería.");
     } finally {
       setLoading(false);
     }
@@ -106,7 +103,7 @@ const Mercaderia = () => {
         // Recargar las mercaderías después de la eliminación
         cargarMercaderias();
       } catch (error) {
-        setError("Hubo un error 3");
+        setError("Hubo un error al eliminar la mercadería.");
       } finally {
         setLoading(false);
       }
@@ -122,16 +119,22 @@ const Mercaderia = () => {
     setEditId(mercaderia.id);
   };
 
+  // Calcular el total de precios de las mercaderías
+const calcularTotal = () => {
+  return mercaderias.reduce((total, mercaderia) => {
+    return total + (mercaderia.precio * mercaderia.stockDisponible);
+  }, 0);
+};
+
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography
-        variant="h4"
-        align="center"
-        gutterBottom
-        sx={{ color: "#c20000" }}
-      >
+      <Typography variant="h4" align="center" gutterBottom sx={{ color: "#c20000" }}>
         Gestión de Mercadería
       </Typography>
+
+
+
 
       {/* Formulario */}
       <Paper sx={{ p: 4, mb: 4, borderRadius: 2, boxShadow: 3 }}>
@@ -190,9 +193,7 @@ const Mercaderia = () => {
             color="primary"
             fullWidth
             sx={{ mt: 3 }}
-            disabled={
-              loading || !nombre || !precio || !marca || stockDisponible === 0
-            }
+            disabled={loading || !nombre || !precio || !marca || stockDisponible === 0}
           >
             {editId ? "Actualizar Mercadería" : "Crear Mercadería"}
           </Button>
@@ -208,6 +209,12 @@ const Mercaderia = () => {
       <Typography variant="h6" gutterBottom sx={{ color: "#c20000" }}>
         Lista de Mercaderías
       </Typography>
+
+       {/* Total de precios */}
+<Typography variant="h6" gutterBottom sx={{ color: "#000", fontWeight: "bold" }}>
+  Total Precio: ${calcularTotal()}
+</Typography>
+
 
       {loading ? (
         <CircularProgress sx={{ display: "block", margin: "auto" }} />

@@ -12,7 +12,7 @@ const Footer = () => {
   }}
 >
   <Typography variant="body1" sx={{ fontWeight: "bold", marginBottom: "8px" }}>
-    © 2024 Nutinez
+    © 2024 NUTINEZ
   </Typography>
 </Box>
 ;
