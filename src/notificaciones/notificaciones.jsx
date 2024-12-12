@@ -11,71 +11,74 @@ const Notificaciones = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const [titulo, setTitulo] = useState('');
   const [mensaje, setMensaje] = useState('');
-  const [scheduledAt, setScheduledAt] = useState(null); // Agregado para la fecha y hora
+  const [scheduledAt, setScheduledAt] = useState(null);
   const [editId, setEditId] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   // Solicitar permisos para las notificaciones al montar el componente
   useEffect(() => {
-    // Verificar si ya se tienen permisos para las notificaciones
     if (Notification.permission !== 'granted') {
       Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          console.log('Notificaciones habilitadas');
-        } else {
-          console.log('Notificaciones denegadas');
+        if (permission !== 'granted') {
+          console.warn('Permisos de notificaciones denegados');
         }
       });
     }
   }, []);
 
-  // Cargar las notificaciones desde la API cuando el componente se monte
+  // Cargar las notificaciones desde la API
   useEffect(() => {
     fetchNotificaciones();
   }, []);
 
-  // Obtener las notificaciones desde la API
   const fetchNotificaciones = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/notificaciones');
-      const data = Array.isArray(response.data.data) ? response.data.data : [];
-      setNotificaciones(data);
+      setNotificaciones(response.data.data || []);
     } catch (error) {
       console.error("Error al obtener las notificaciones:", error);
     }
   };
 
-  // Función para enviar notificación
-  const sendNotification = (titulo, mensaje) => {
+  // Enviar una notificación emergente del navegador
+  const sendNotification = async (notificacion) => {
     if (Notification.permission === 'granted') {
-      new Notification(titulo, { body: mensaje });
+      new Notification(notificacion.titulo, { body: notificacion.mensaje });
+
+      // Marcar como notificada en la base de datos
+      try {
+        await axios.put(`http://localhost:3000/api/notificaciones?id=${notificacion.id}`, {
+          ...notificacion,
+          notified: true,
+        });
+
+        // Actualizar el estado local
+        setNotificaciones((prevNotificaciones) =>
+          prevNotificaciones.map((n) =>
+            n.id === notificacion.id ? { ...n, notified: true } : n
+          )
+        );
+      } catch (error) {
+        console.error('Error al actualizar el estado de notificación:', error);
+      }
     }
   };
 
-  // useEffect para verificar y disparar notificaciones programadas
+  // Verificar notificaciones programadas
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
       notificaciones.forEach((notificacion) => {
         const scheduledDate = new Date(notificacion.scheduledAt);
         if (scheduledDate <= now && !notificacion.notified) {
-          sendNotification(notificacion.titulo, notificacion.mensaje);
-          // Marcar la notificación como notificada
-          notificacion.notified = true;
-          // Actualizar el estado de las notificaciones
-          setNotificaciones(prevNotificaciones =>
-            prevNotificaciones.map(n =>
-              n.id === notificacion.id ? { ...n, notified: true } : n
-            )
-          );
+          sendNotification(notificacion);
         }
       });
     }, 60000); // Comprobar cada minuto
 
-    return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonte
+    return () => clearInterval(interval);
   }, [notificaciones]);
 
-  // Función para agregar o editar notificación
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -83,32 +86,23 @@ const Notificaciones = () => {
       return alert("Todos los campos son obligatorios.");
     }
 
-    const datos = { titulo, mensaje, scheduledAt: scheduledAt.toISOString(), id: editId, notified: false }; // Agregar un campo "notified"
+    const datos = { titulo, mensaje, scheduledAt: scheduledAt.toISOString(), id: editId, notified: false };
 
     try {
       if (editId) {
-        // Editar notificación
         const updatedNotificaciones = notificaciones.map((notificacion) =>
           notificacion.id === editId ? { ...notificacion, ...datos } : notificacion
         );
         setNotificaciones(updatedNotificaciones);
-
-        // Actualizar en la base de datos
         await axios.put(`http://localhost:3000/api/notificaciones?id=${editId}`, datos);
-        console.log(`Notificación con ID ${editId} actualizada.`);
       } else {
-        // Agregar nueva notificación
-        const newNotificacion = { ...datos };
-        setNotificaciones([...notificaciones, newNotificacion]);
-
-        // Agregar en la base de datos
-        await axios.post('http://localhost:3000/api/notificaciones', newNotificacion);
-        console.log(`Notificación con ID ${datos.id} agregada.`);
+        const response = await axios.post('http://localhost:3000/api/notificaciones', datos);
+        setNotificaciones([...notificaciones, response.data.data]);
       }
 
       setTitulo('');
       setMensaje('');
-      setScheduledAt(null); // Limpiar el valor de fecha y hora
+      setScheduledAt(null);
       setEditId(null);
       setOpenDialog(false);
     } catch (error) {
@@ -116,41 +110,31 @@ const Notificaciones = () => {
     }
   };
 
-  // Función para eliminar notificación
   const handleDelete = async (id) => {
     try {
-      // Eliminar de la base de datos
       await axios.delete(`http://localhost:3000/api/notificaciones?id=${id}`);
-
-      // Eliminar de la UI
-      const updatedNotificaciones = notificaciones.filter(notificacion => notificacion.id !== id);
-      setNotificaciones(updatedNotificaciones);
-
-      console.log(`Notificación con ID ${id} eliminada.`);
+      setNotificaciones(notificaciones.filter((notificacion) => notificacion.id !== id));
     } catch (error) {
       console.error("Error al eliminar la notificación:", error);
     }
   };
 
-  // Función para abrir el formulario de edición
   const handleEdit = (notificacion) => {
     setTitulo(notificacion.titulo);
     setMensaje(notificacion.mensaje);
-    setScheduledAt(new Date(notificacion.scheduledAt)); // Establecer la fecha programada para la edición
+    setScheduledAt(new Date(notificacion.scheduledAt));
     setEditId(notificacion.id);
     setOpenDialog(true);
   };
 
-  // Función para abrir el diálogo de agregar nueva notificación
   const handleAdd = () => {
     setTitulo('');
     setMensaje('');
-    setScheduledAt(null); // Limpiar la fecha
+    setScheduledAt(null);
     setEditId(null);
     setOpenDialog(true);
   };
 
-  // Función para el custom input para el DatePicker
   const CustomInput = ({ value, onClick }) => (
     <MuiTextField
       label="Fecha y Hora"
@@ -164,19 +148,16 @@ const Notificaciones = () => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      {/* Título principal */}
       <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ color: "#c20000" }}>
         Gestión de Notificaciones
       </Typography>
 
-      {/* Botón para agregar notificación */}
       <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
         <Button variant="contained" color="primary" onClick={handleAdd}>
           Agregar Notificación
         </Button>
       </Box>
 
-      {/* Lista de notificaciones */}
       <Paper sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
         <List>
           {notificaciones.map((notificacion) => (
@@ -197,7 +178,6 @@ const Notificaciones = () => {
         </List>
       </Paper>
 
-      {/* Diálogo de edición o creación */}
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}

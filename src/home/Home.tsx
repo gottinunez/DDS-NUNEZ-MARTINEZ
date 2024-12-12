@@ -18,11 +18,11 @@ const Home = () => {
     <>
       <Stack
         sx={{
-          paddingTop:"5.1%",
+          paddingTop: "5.1%",
           marginTop: "3%",
           paddingRight: "25%",
           paddingLeft: "25%",
-          justifyContent:"center",
+          justifyContent: "center",
         }}
       >
         <Button
@@ -49,6 +49,15 @@ const Home = () => {
           href="/notificaciones"
         >
           Notificaciones
+        </Button>
+        <br />
+        <br />
+        <Button
+          style={{ fontWeight: "bold" }}
+          variant="contained"
+          href="/calcularinflacion"
+        >
+          Calcular Inflacion
         </Button>
       </Stack>
     </>

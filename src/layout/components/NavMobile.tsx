@@ -15,7 +15,7 @@ const NavMobile: React.FC = () => {
       {/* Barra de navegación */}
       <AppBar position="static">
         <Toolbar>
-          <IconButton 
+          <IconButton
             color="inherit"
             onClick={() => toggleDrawer(true)}
           >
@@ -36,36 +36,28 @@ const NavMobile: React.FC = () => {
           onClick={() => toggleDrawer(false)}
           onKeyDown={() => toggleDrawer(false)}
         >
-             <Button  href='/' fullWidth  sx={{marginBottom: 1,
-    backgroundColor: "#c20000", // Fondo predeterminado
-    color: "white", // Texto predeterminado
-    "&:hover": {
-      backgroundColor: "#ffffff", // Fondo al pasar el mouse
-      color: "#c20000", // Texto al pasar el mouse
-    },
-              }}>
-    Home
-    </Button>
-           <Button  href='/sobrenosotros' fullWidth  sx={{marginBottom: 1,
-    backgroundColor: "#c20000", // Fondo predeterminado
-    color: "white", // Texto predeterminado
-    "&:hover": {
-      backgroundColor: "#ffffff", // Fondo al pasar el mouse
-      color: "#c20000", // Texto al pasar el mouse
-    },
-              }}>
-      Sobre Nosotros
-    </Button>
-     <Button  href='/calculadora' fullWidth  sx={{
-    backgroundColor: "#c20000", // Fondo predeterminado
-    color: "white", // Texto predeterminado
-    "&:hover": {
-      backgroundColor: "#ffffff", // Fondo al pasar el mouse
-      color: "#c20000", // Texto al pasar el mouse
-    },
-              }}>
-    Calculadora
-    </Button>
+          <Button href='/' fullWidth sx={{
+            marginBottom: 1,
+            backgroundColor: "#c20000", // Fondo predeterminado
+            color: "white", // Texto predeterminado
+            "&:hover": {
+              backgroundColor: "#ffffff", // Fondo al pasar el mouse
+              color: "#c20000", // Texto al pasar el mouse
+            },
+          }}>
+            Home
+          </Button>
+          <Button href='/sobrenosotros' fullWidth sx={{
+            marginBottom: 1,
+            backgroundColor: "#c20000", // Fondo predeterminado
+            color: "white", // Texto predeterminado
+            "&:hover": {
+              backgroundColor: "#ffffff", // Fondo al pasar el mouse
+              color: "#c20000", // Texto al pasar el mouse
+            },
+          }}>
+            Sobre Nosotros
+          </Button>
         </Box>
       </Drawer>
     </>

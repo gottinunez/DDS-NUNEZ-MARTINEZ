@@ -1,13 +1,13 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Box, Link } from '@mui/material';
-import NavDesktop from './NavDesktop'; 
+import NavDesktop from './NavDesktop';
 import NavMobile from './NavMobile';
 
 const Header = () => (
   <AppBar position="sticky" sx={{ backgroundColor: '#c20000', boxShadow: 3 }}>
     <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       {/* Logo y nombre de la marca centrado */}
-      <Box sx={{ display: 'flex', justifyContent:"center", flexGrow: 1,}}>
+      <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
         <Link underline="none" color="inherit">
           <Typography
             variant="h6"
@@ -23,14 +23,14 @@ const Header = () => (
       </Box>
 
       {/* Contenedor de la navegación (NavDesktop y NavMobile) */}
-     {/* NavDesktop solo visible en pantallas grandes */}
-     <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexGrow: 1 }}>
-          <NavDesktop />
-        </Box>
-        {/* Mostrar NavMobile solo en pantallas pequeñas */}
-        <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-          <NavMobile />
-        </Box>
+      {/* NavDesktop solo visible en pantallas grandes */}
+      <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexGrow: 1 }}>
+        <NavDesktop />
+      </Box>
+      {/* Mostrar NavMobile solo en pantallas pequeñas */}
+      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+        <NavMobile />
+      </Box>
     </Toolbar>
   </AppBar>
 );
