@@ -46,9 +46,9 @@ const App = () => {
       alert(`No details available for input: '${place.name}'`);
     }
   };
-
+  console.log(process.env.NEXT_PUBLIC_GOOGLEMAPSKEY)
   return (
-    <LoadScript googleMapsApiKey="" libraries={libraries}>
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLEMAPSKEY} libraries={libraries}>
       <Box
         sx={{
           display: "flex",

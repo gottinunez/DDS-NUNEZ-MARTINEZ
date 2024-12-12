@@ -3,8 +3,10 @@ import { TextField, Button, Typography, Container } from "@mui/material";
 
 const CalcularInflacion = () => {
     const [inputValue, setInputValue] = useState("");
-    const [inflationRate, setInflationRate] = useState(5); // Tasa de inflación predeterminada en porcentaje
     const [result, setResult] = useState(null);
+
+    // Valor fijo de la tasa de inflación (por ejemplo, 5%)
+    const inflationRate = 5;
 
     const handleCalculate = () => {
         const number = parseFloat(inputValue);
@@ -21,20 +23,14 @@ const CalcularInflacion = () => {
             <Typography variant="h4" gutterBottom>
                 Calculadora de Inflación
             </Typography>
+            <Typography variant="h6" gutterBottom>
+                Tasa de inflación: {inflationRate}%
+            </Typography>
             <TextField
                 label="Ingrese un número"
                 variant="outlined"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Tasa de Inflación (%)"
-                variant="outlined"
-                type="number"
-                value={inflationRate}
-                onChange={(e) => setInflationRate(e.target.value)}
                 fullWidth
                 margin="normal"
             />
