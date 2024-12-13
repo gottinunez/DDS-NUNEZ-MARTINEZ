@@ -60,6 +60,7 @@ const Home = () => {
           Calcular Inflacion
         </Button>
       </Stack>
+
     </>
   );
 };

@@ -5,9 +5,7 @@ import { Button, Grid, TextField, Box, Typography } from '@mui/material';
 
 const Calculadora = () => {
   const [input, setInput] = useState<string>(''); // Para operaciones matemáticas
-  const [initialCPI, setInitialCPI] = useState<string>(''); // Para CPI inicial
-  const [finalCPI, setFinalCPI] = useState<string>(''); // Para CPI final
-  const [inflationResult, setInflationResult] = useState<string>(''); // Para mostrar resultado de inflación
+
 
   // Maneja clics en los botones de la calculadora
   const handleClick = (value: string) => {
@@ -17,9 +15,6 @@ const Calculadora = () => {
   // Borra el contenido del input
   const handleClear = () => {
     setInput('');
-    setInitialCPI('');
-    setFinalCPI('');
-    setInflationResult('');
   };
 
   // Evalúa la expresión matemática
@@ -28,21 +23,6 @@ const Calculadora = () => {
       setInput(eval(input).toString());
     } catch {
       setInput('Error');
-    }
-  };
-
-  // Calcula la inflación y actualiza la barra de entrada con la fórmula
-  const handleInflation = () => {
-    const initial = parseFloat(initialCPI);
-    const final = parseFloat(finalCPI);
-
-    if (!isNaN(initial) && !isNaN(final) && initial !== 0) {
-      const inflation = ((final - initial) / initial) * 100;
-      setInflationResult(inflation.toFixed(2));
-      setInput(`(( ${final} - ${initial} ) / ${initial}) * 100 = ${inflation.toFixed(2)}%`); // Muestra la cuenta en la barra
-    } else {
-      setInflationResult('Por favor ingresa valores válidos de CPI');
-      setInput(''); // Limpiar la barra si los valores no son válidos
     }
   };
 
@@ -96,32 +76,6 @@ const Calculadora = () => {
           sx={{ padding: "2", marginBottom: 2, width: 500 }}
           inputProps={{ readOnly: true }}
         />
-        
-        {/* Campos de entrada para calcular inflación */}
-        <TextField
-          label="CPI Inicial"
-          type="number"
-          value={initialCPI}
-          onChange={(e) => setInitialCPI(e.target.value)}
-          variant="outlined"
-          sx={{ marginBottom: 2, width: 500 }}
-        />
-        <TextField
-          label="CPI Final"
-          type="number"
-          value={finalCPI}
-          onChange={(e) => setFinalCPI(e.target.value)}
-          variant="outlined"
-          sx={{ marginBottom: 2, width: 500 }}
-        />
-        <Button variant="contained" onClick={handleInflation} sx={{ marginBottom: 2 }}>
-          Calcular Inflación
-        </Button>
-        {inflationResult && (
-          <Typography variant="h6" sx={{ color: "#c20000" }}>
-            Inflación: {inflationResult}%
-          </Typography>
-        )}
 
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
