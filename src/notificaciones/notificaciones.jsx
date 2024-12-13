@@ -33,7 +33,7 @@ const Notificaciones = () => {
 
   const fetchNotificaciones = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/notificaciones');
+      const response = await axios.get('/api/notificaciones');
       setNotificaciones(response.data.data || []);
     } catch (error) {
       console.error("Error al obtener las notificaciones:", error);
@@ -47,7 +47,7 @@ const Notificaciones = () => {
 
       // Marcar como notificada en la base de datos
       try {
-        await axios.put(`http://localhost:3000/api/notificaciones?id=${notificacion.id}`, {
+        await axios.put(`/api/notificaciones?id=${notificacion.id}`, {
           ...notificacion,
           notified: true,
         });
@@ -70,7 +70,13 @@ const Notificaciones = () => {
       const now = new Date();
       notificaciones.forEach((notificacion) => {
         const scheduledDate = new Date(notificacion.scheduledAt);
+        
+        // Verificar si es el momento para mostrar la notificación
         if (scheduledDate <= now && !notificacion.notified) {
+          // Aquí mostramos el alert solo si no ha sido notificada
+          alert(`${notificacion.titulo}: ${notificacion.mensaje}`);
+
+          // Marcar como notificada
           sendNotification(notificacion);
         }
       });
@@ -87,18 +93,23 @@ const Notificaciones = () => {
     }
 
     const datos = { titulo, mensaje, scheduledAt: scheduledAt.toISOString(), id: editId, notified: false };
-
+    console.log(scheduledAt.toISOString())
     try {
       if (editId) {
+        // Actualizar notificación existente
         const updatedNotificaciones = notificaciones.map((notificacion) =>
           notificacion.id === editId ? { ...notificacion, ...datos } : notificacion
         );
         setNotificaciones(updatedNotificaciones);
-        await axios.put(`http://localhost:3000/api/notificaciones?id=${editId}`, datos);
+
+        // Llamar al servidor para actualizar la notificación
+        await axios.put(`/api/notificaciones?id=${editId}`, datos);
       } else {
-        const response = await axios.post('http://localhost:3000/api/notificaciones', datos);
+        // Crear nueva notificación
+        const response = await axios.post('/api/notificaciones', datos);
         setNotificaciones([...notificaciones, response.data.data]);
       }
+      alert("Se guardó la notificación");
 
       setTitulo('');
       setMensaje('');
@@ -112,7 +123,10 @@ const Notificaciones = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/notificaciones?id=${id}`);
+      // Llamar al servidor para eliminar la notificación
+      await axios.delete(`/api/notificaciones?id=${id}`);
+
+      // Eliminar la notificación de la lista de notificaciones
       setNotificaciones(notificaciones.filter((notificacion) => notificacion.id !== id));
     } catch (error) {
       console.error("Error al eliminar la notificación:", error);
@@ -135,6 +149,7 @@ const Notificaciones = () => {
     setOpenDialog(true);
   };
 
+  // Componente CustomInput para DatePicker
   const CustomInput = ({ value, onClick }) => (
     <MuiTextField
       label="Fecha y Hora"
@@ -143,6 +158,13 @@ const Notificaciones = () => {
       fullWidth
       variant="outlined"
       margin="normal"
+      sx={{
+        // Reducir el tamaño del campo
+        '& .MuiInputBase-root': {
+          fontSize: '0.875rem', // Tamaño de fuente más pequeño
+        },
+        maxWidth: 500, // Ancho máximo
+      }}
     />
   );
 
@@ -210,6 +232,10 @@ const Notificaciones = () => {
             timeIntervals={5}
             minDate={new Date()}
             customInput={<CustomInput />}
+            sx={{
+              width: '50%', // Asegura que ocupe todo el ancho disponible
+              maxWidth: 50, // Ajusta el tamaño máximo si lo necesitas
+            }}
           />
         </DialogContent>
         <DialogActions sx={{ padding: 5 }}>

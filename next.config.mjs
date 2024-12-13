@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require("next-pwa")({
+import createPWA from "next-pwa";
+const withPWA = createPWA({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
 });
 
-module.exports = withPWA({
-  // config
+export default withPWA({
   images: {
     domains: ["picsum.photos"],
   },
