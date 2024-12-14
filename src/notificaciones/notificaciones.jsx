@@ -74,7 +74,7 @@ const Notificaciones = () => {
         // Verificar si es el momento para mostrar la notificación
         if (scheduledDate <= now && !notificacion.notified) {
           // Aquí mostramos el alert solo si no ha sido notificada
-          alert(`${notificacion.titulo}: ${notificacion.mensaje}`);
+         // alert(`${notificacion.titulo}: ${notificacion.mensaje}`);
 
           // Marcar como notificada
           sendNotification(notificacion);

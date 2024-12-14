@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -7,6 +7,7 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { TextField, Box, Paper } from "@mui/material";
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'; // Asegúrate de tener esto importado
 
 const containerStyle = {
   width: "100%",
@@ -18,16 +19,40 @@ const center = {
   lng: -73.98633,
 };
 
-const libraries = ["places"]; // Asegúrate de cargar la biblioteca 'places' para usar Autocomplete
+const libraries = ["places"];
 
-const App = () => {
+const App = ({ mayoristas }) => { // Ahora recibimos mayoristas como prop
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [infoWindowOpen, setInfoWindowOpen] = useState(false);
   const [zoom, setZoom] = useState(13);
-  const autocompleteRef = useRef(null); // Usamos useRef para almacenar la instancia de Autocomplete
+  const [markers, setMarkers] = useState([]);
+  const autocompleteRef = useRef(null);
 
-  // Función que se ejecuta cuando se selecciona un lugar en el Autocomplete
+  // Función para geocodificar las direcciones de los mayoristas y obtener las coordenadas
+  useEffect(() => {
+    const fetchMarkers = async () => {
+      const newMarkers = [];
+      for (const mayorista of mayoristas) {
+        try {
+          const results = await geocodeByAddress(mayorista.ubicacion);
+          const latLng = await getLatLng(results[0]);
+          newMarkers.push({
+            id: mayorista.id,
+            name: mayorista.nombre,
+            position: latLng,
+            address: mayorista.ubicacion,
+          });
+        } catch (error) {
+          console.error("Error geocodificando la dirección:", error);
+        }
+      }
+      setMarkers(newMarkers);
+    };
+
+    fetchMarkers();
+  }, [mayoristas]);
+
   const onPlaceSelected = () => {
     const autocomplete = autocompleteRef.current;
     if (!autocomplete) return;
@@ -39,14 +64,18 @@ const App = () => {
         lat: location.lat(),
         lng: location.lng(),
       });
-      setZoom(17); // Cambia el zoom al nivel 17 cuando se selecciona un lugar
-      setSelectedPlace(place);
+      setZoom(17);
+      setSelectedPlace({
+        name: place.name,
+        position: { lat: location.lat(), lng: location.lng() },
+        address: place.formatted_address,
+      });
       setInfoWindowOpen(true);
     } else {
       alert(`No details available for input: '${place.name}'`);
     }
   };
-  console.log(process.env.NEXT_PUBLIC_GOOGLEMAPSKEY)
+
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLEMAPSKEY} libraries={libraries}>
       <Box
@@ -62,9 +91,9 @@ const App = () => {
         >
           <Autocomplete
             onLoad={(autocomplete) => {
-              autocompleteRef.current = autocomplete; // Almacena la instancia de Autocomplete
+              autocompleteRef.current = autocomplete;
             }}
-            onPlaceChanged={onPlaceSelected} // Llama a onPlaceSelected cuando un lugar es seleccionado
+            onPlaceChanged={onPlaceSelected}
           >
             <TextField
               label="Ingresa una direccion"
@@ -72,8 +101,8 @@ const App = () => {
               variant="outlined"
               placeholder="Ingresa una direccion"
               sx={{
-                fontSize: "0.875rem", // Reducir el tamaño de la fuente
-                height: "45px", // Reducir la altura de la barra
+                fontSize: "0.875rem",
+                height: "45px",
                 "& .MuiOutlinedInput-root": {
                   height: "45px",
                 },
@@ -87,24 +116,35 @@ const App = () => {
           center={markerPosition}
           zoom={zoom}
           options={{
-            // Opciones para controlar el mapa (por ejemplo, quitar los controles de zoom)
             disableDefaultUI: true,
             zoomControl: true,
           }}
         >
-          <Marker position={markerPosition} />
-          {infoWindowOpen && selectedPlace && (
-            <InfoWindow
-              position={markerPosition}
-              onCloseClick={() => setInfoWindowOpen(false)}
+          {/* Marcadores de mayoristas */}
+          {markers.map((marker) => (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              onClick={() => {
+                setSelectedPlace(marker);
+                setInfoWindowOpen(true);
+              }}
             >
-              <div>
-                <strong>{selectedPlace.name}</strong>
-                <br />
-                <span>{selectedPlace.formatted_address}</span>
-              </div>
-            </InfoWindow>
-          )}
+              {/* InfoWindow asociado a cada marcador */}
+              {infoWindowOpen && selectedPlace?.id === marker.id && (
+                <InfoWindow
+                  position={marker.position}
+                  onCloseClick={() => setInfoWindowOpen(false)}
+                >
+                  <div>
+                    <strong>{selectedPlace.name}</strong>
+                    <br />
+                    <span>{selectedPlace.address}</span>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
+          ))}
         </GoogleMap>
       </Box>
     </LoadScript>

@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Container, Typography, Card, CardContent, CardActions } from '@mui/material';
 import App from '@/src/mapa/mapa';
@@ -20,16 +18,13 @@ const MayoristasPage = () => {
     ubicacion: '',
   });
 
-  // Cargar mayoristas al cargar la página
   useEffect(() => {
     const fetchMayoristas = async () => {
       try {
         const response = await fetch('/api/mayoristas');
-
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
-
         const data = await response.json();
         setMayoristas(data);
       } catch (error) {
@@ -37,11 +32,9 @@ const MayoristasPage = () => {
       }
     };
 
-
     fetchMayoristas();
   }, []);
 
-  // Manejo del cambio de datos en el formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -50,7 +43,6 @@ const MayoristasPage = () => {
     }));
   };
 
-  // Manejo de la creación o actualización del mayorista
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -71,7 +63,6 @@ const MayoristasPage = () => {
       setMayoristas(mayoristas.map((m) => (m.id === formData.id ? data : m)));
     }
 
-    // Limpiar formulario después de enviar
     setFormData({
       id: 0,
       nombre: '',
@@ -80,7 +71,6 @@ const MayoristasPage = () => {
     });
   };
 
-  // Manejo de la eliminación de un mayorista
   const handleDelete = async (id: number) => {
     await fetch('/api/mayoristas', {
       method: 'DELETE',
@@ -90,18 +80,16 @@ const MayoristasPage = () => {
     setMayoristas(mayoristas.filter((mayorista) => mayorista.id !== id));
   };
 
-  // Manejo de la edición de un mayorista
   const handleEdit = (mayorista: Mayorista) => {
     setFormData(mayorista);
   };
 
   return (
-    <><Container maxWidth="sm" sx={{ mt: 4 }}>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom color={"#c20000"}>
         Mayoristas
       </Typography>
 
-      {/* Formulario de Crear/Editar Mayorista */}
       <Card sx={{ mb: 4 }}>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -146,7 +134,6 @@ const MayoristasPage = () => {
         </CardContent>
       </Card>
 
-      {/* Lista de Mayoristas */}
       <Typography variant="h5" gutterBottom color={"#c20000"}>
         Lista de Mayoristas
       </Typography>
@@ -154,12 +141,13 @@ const MayoristasPage = () => {
         <Card key={mayorista.id} sx={{ mb: 2 }}>
           <CardContent>
             <Typography variant="h6">{mayorista.nombre}</Typography>
-            <Typography variant="body2" color="textSecondary">
-              {mayorista.ubicacion}
-            </Typography>
             <a href={mayorista.pagina_web} target="_blank" rel="noopener noreferrer" style={{ display: 'block', marginTop: 8 }}>
               {mayorista.pagina_web}
             </a>
+            <br/>
+            <Typography variant="body2" color="textSecondary">
+              {mayorista.ubicacion}
+            </Typography>
           </CardContent>
           <CardActions>
             <Button size="small" color="primary" onClick={() => handleEdit(mayorista)}>
@@ -171,12 +159,10 @@ const MayoristasPage = () => {
           </CardActions>
         </Card>
       ))}
+      {/* Pasamos los mayoristas al componente del mapa */}
+      <App mayoristas={mayoristas} />
     </Container>
-      <App /></>
   );
 };
 
-
 export default MayoristasPage;
-
-
