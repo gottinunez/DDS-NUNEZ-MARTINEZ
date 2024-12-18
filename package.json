@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "dev": "bun dev",
-    "build": "bun build",
-    "start": "bun start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "jest"
   },
   "dependencies": {
