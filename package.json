@@ -16,6 +16,7 @@
     "@react-google-maps/api": "^2.20.3",
     "@types/node-schedule": "^2.1.7",
     "axios": "^1.7.9",
+    "caniuse-lite": "^1.0.30001690",
     "firebase": "^11.1.0",
     "next": "latest",
     "next-pwa": "^5.6.0",
