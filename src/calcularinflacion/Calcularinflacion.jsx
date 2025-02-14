@@ -3,18 +3,17 @@ import { TextField, Button, Typography, Container } from "@mui/material";
 
 const CalcularInflacion = () => {
     const [inputValue, setInputValue] = useState("");
+    const [inflationRate, setInflationRate] = useState(""); // Estado para la tasa de inflación
     const [result, setResult] = useState(null);
 
-    // Valor fijo de la tasa de inflación (por ejemplo, 5%)
-    const inflationRate = 5;
-
     const handleCalculate = () => {
-        const number = parseFloat(inputValue);
-        if (!isNaN(number)) {
-            const calculatedValue = number * (1 + inflationRate / 100);
+        const amount = parseFloat(inputValue);
+        const rate = parseFloat(inflationRate);
+        if (!isNaN(amount) && !isNaN(rate)) {
+            const calculatedValue = amount * (1 + rate / 100);
             setResult(calculatedValue.toFixed(2)); // Redondear a dos decimales
         } else {
-            setResult("Por favor, ingrese un número válido.");
+            setResult("Por favor, ingrese valores válidos.");
         }
     };
 
@@ -23,17 +22,30 @@ const CalcularInflacion = () => {
             <Typography variant="h4" gutterBottom>
                 Calculadora de Inflación
             </Typography>
-            <Typography variant="h6" gutterBottom>
-                Tasa de inflación: {inflationRate}%
-            </Typography>
             <TextField
-                label="Ingrese un número"
+                label="Ingrese un monto"
                 variant="outlined"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 fullWidth
                 margin="normal"
             />
+            <TextField
+                label="Ingrese la tasa de inflación (%)"
+                variant="outlined"
+                value={inflationRate}
+                onChange={(e) => setInflationRate(e.target.value)}
+                fullWidth
+                margin="normal"
+            />
+             <Button 
+                variant="contained"
+                color="primary"
+                href="https://x.com/INDECArgentina"
+                style={{ marginTop: "20px", marginRight:"20px" }}
+            >
+                Saber Inflacion
+            </Button>
             <Button
                 variant="contained"
                 color="primary"

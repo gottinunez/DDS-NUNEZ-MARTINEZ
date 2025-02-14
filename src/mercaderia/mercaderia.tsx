@@ -30,10 +30,10 @@ const Mercaderia = () => {
   const [marca, setMarca] = useState("");
   const [stockDisponible, setStockDisponible] = useState(0);
   const [editId, setEditId] = useState<number | null>(null);
+  const [filtro, setFiltro] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  // Cargar todas las mercaderías
   const cargarMercaderias = async () => {
     setLoading(true);
     setError("");
@@ -52,7 +52,6 @@ const Mercaderia = () => {
     cargarMercaderias();
   }, []);
 
-  // Crear o actualizar una mercadería
   const manejarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const mercaderia = { nombre, precio, marca, stockDisponible };
@@ -72,14 +71,12 @@ const Mercaderia = () => {
       const data = await res.json();
       alert(data.message);
 
-      // Limpiar el formulario
       setNombre("");
       setPrecio(0);
       setMarca("");
       setStockDisponible(0);
       setEditId(null);
 
-      // Recargar las mercaderías después de la creación o actualización
       cargarMercaderias();
     } catch (error) {
       setError("Hubo un error al guardar la mercadería.");
@@ -88,7 +85,6 @@ const Mercaderia = () => {
     }
   };
 
-  // Eliminar una mercadería
   const manejarEliminar = async (id: number) => {
     if (confirm("¿Estás seguro de eliminar esta mercadería?")) {
       setLoading(true);
@@ -99,8 +95,6 @@ const Mercaderia = () => {
         });
         const data = await res.json();
         alert(data.message);
-
-        // Recargar las mercaderías después de la eliminación
         cargarMercaderias();
       } catch (error) {
         setError("Hubo un error al eliminar la mercadería.");
@@ -110,7 +104,6 @@ const Mercaderia = () => {
     }
   };
 
-  // Editar una mercadería
   const manejarEditar = (mercaderia: Mercaderia) => {
     setNombre(mercaderia.nombre);
     setPrecio(mercaderia.precio);
@@ -119,13 +112,10 @@ const Mercaderia = () => {
     setEditId(mercaderia.id);
   };
 
-  // Calcular el total de precios de las mercaderías
-const calcularTotal = () => {
-  return mercaderias.reduce((total, mercaderia) => {
-    return total + (mercaderia.precio * mercaderia.stockDisponible);
-  }, 0);
-};
-
+  const mercaderiasFiltradas = mercaderias.filter((m) =>
+    m.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+    m.marca.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -133,10 +123,6 @@ const calcularTotal = () => {
         Gestión de Mercadería
       </Typography>
 
-
-
-
-      {/* Formulario */}
       <Paper sx={{ p: 4, mb: 4, borderRadius: 2, boxShadow: 3 }}>
         <form onSubmit={manejarSubmit}>
           <Grid container spacing={2}>
@@ -150,7 +136,6 @@ const calcularTotal = () => {
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Precio"
@@ -162,7 +147,6 @@ const calcularTotal = () => {
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Marca"
@@ -173,7 +157,6 @@ const calcularTotal = () => {
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 label="Stock Disponible"
@@ -186,39 +169,24 @@ const calcularTotal = () => {
               />
             </Grid>
           </Grid>
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 3 }}
-            disabled={loading || !nombre || !precio || !marca || stockDisponible === 0}
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
             {editId ? "Actualizar Mercadería" : "Crear Mercadería"}
           </Button>
         </form>
-
-        {error && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            {error}
-          </Typography>
-        )}
       </Paper>
-
-      <Typography variant="h6" gutterBottom sx={{ color: "#c20000" }}>
-        Lista de Mercaderías
-      </Typography>
-
-       {/* Total de precios */}
-<Typography variant="h6" gutterBottom sx={{ color: "#000", fontWeight: "bold" }}>
-  Total Precio: ${calcularTotal()}
-</Typography>
-
+      
+      <TextField
+        label="Buscar Mercadería"
+        variant="outlined"
+        fullWidth
+        sx={{ mb: 3 }}
+        value={filtro}
+        onChange={(e) => setFiltro(e.target.value)}
+      />
 
       {loading ? (
         <CircularProgress sx={{ display: "block", margin: "auto" }} />
-      ) : Array.isArray(mercaderias) && mercaderias.length > 0 ? (
+      ) : mercaderiasFiltradas.length > 0 ? (
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -231,28 +199,15 @@ const calcularTotal = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mercaderias.map((mercaderia) => (
+              {mercaderiasFiltradas.map((mercaderia) => (
                 <TableRow key={mercaderia.id}>
                   <TableCell>{mercaderia.nombre}</TableCell>
                   <TableCell>${mercaderia.precio}</TableCell>
                   <TableCell>{mercaderia.marca}</TableCell>
                   <TableCell>{mercaderia.stockDisponible}</TableCell>
                   <TableCell>
-                    <Button
-                      onClick={() => manejarEditar(mercaderia)}
-                      variant="outlined"
-                      color="warning"
-                      sx={{ mr: 1 }}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      onClick={() => manejarEliminar(mercaderia.id)}
-                      variant="outlined"
-                      color="error"
-                    >
-                      Eliminar
-                    </Button>
+                    <Button onClick={() => manejarEditar(mercaderia)} color="warning">Editar</Button>
+                    <Button onClick={() => manejarEliminar(mercaderia.id)} color="error">Eliminar</Button>
                   </TableCell>
                 </TableRow>
               ))}
